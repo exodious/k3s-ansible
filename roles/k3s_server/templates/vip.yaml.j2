@@ -36,7 +36,11 @@ spec:
         - name: vip_interface
           value: {{ kube_vip_iface }}
 {% endif %}
+{% if kube_vip_tag_version.split('.') | map('int') | list < 'v0.9.0'.split('.') | map('int') | list %}
         - name: vip_cidr
+{% else %}
+        - name: vip_subnet
+{% endif %}
           value: "{{ apiserver_endpoint | ansible.utils.ipsubnet | ansible.utils.ipaddr('prefix') }}"
         - name: cp_enable
           value: "true"
